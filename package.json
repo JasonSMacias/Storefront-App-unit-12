@@ -1,0 +1,24 @@
+{
+  "name": "storefront-app-unit-12",
+  "version": "1.0.0",
+  "description": "Storefront-app-unit-12",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JasonSMacias/Storefront-App-unit-12.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JasonSMacias/Storefront-App-unit-12/issues"
+  },
+  "homepage": "https://github.com/JasonSMacias/Storefront-App-unit-12#readme",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "inquirer": "^6.2.1",
+    "mysql": "^2.16.0"
+  }
+}
