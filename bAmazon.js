@@ -10,7 +10,6 @@ const cTable = require("console.table");
 let itemNumbers = [];
 
 let enough;
-let value;
 
 // variable storing password from .env
 const localDBPW = process.env.MYSQL_PW
@@ -69,21 +68,6 @@ function beginPrompt(){
     if (answer.item > 0 && answer.item < 11){
       console.log(`you ordered ${answer.units} units of item ${answer.item}.`);
       checkStock(answer);
-      setTimeout(function(){
-        if (value === true) {
-          console.log("Your order has been placed, thanks for your business.");
-          disconnect();
-        }
-        else if (value === "try again"){
-          console.log("Please enter a valid number of units to order.");
-          beginPrompt();
-        }
-        else if(value === false){
-          console.log("We're sorry, we do not have sufficient stock to cover that order :-(");
-          console.log(value);
-          disconnect();
-        };
-      }, 2000);
     }
     else {
       console.log("Please enter a valid item number.");
@@ -96,8 +80,8 @@ let checkStock = async function(order) {
   console.log(order);
   if(!Number.isInteger(parseInt(order.units))) {
     
-    return "try again";
-    value = "try again";
+    orderResolve("try again");
+    return false;
   };
 
 
@@ -115,15 +99,29 @@ let checkStock = async function(order) {
   function returnFunction(){
     console.log("outside function "+enough);
     if (enough > 0){
-      return true;
-      value = true;
+      orderResolve(true);
     }
     else {
-      return false;
-      value = false;
+      orderResolve(false);
     };
   };
 
+};
+
+function orderResolve(value){
+  if (value === true) {
+    console.log("Your order has been placed, thanks for your business.");
+    disconnect();
+  }
+  else if (value === "try again"){
+    console.log("Please enter a valid number of units to order.");
+    beginPrompt();
+  }
+  else if(value === false){
+    console.log("We're sorry, we do not have sufficient stock to cover that order :-(");
+    console.log(value);
+    disconnect();
+  };
 };
 
 function disconnect() {
