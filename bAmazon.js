@@ -50,7 +50,7 @@ function startFunction() {
       itemNumbers.push(result[x].item_id);
     };
 
-  console.log(itemNumbers);
+  
   beginPrompt();
   });
 };
@@ -81,7 +81,7 @@ function beginPrompt(){
 };
 
 let checkStock = async function(order) {
-  console.log(order);
+  
   if(!Number.isInteger(parseInt(order.units))) {
     
     orderResolve("try again");
@@ -96,14 +96,14 @@ let checkStock = async function(order) {
     console.log("order units: "+order.units);
     console.log("stock quantity: "+results[0].stock_quantity);
     enough = results[0].stock_quantity - order.units;
-    console.log("inside function "+enough);
+  
     orderInformation = order;
     orderedItem = results[0];
     returnFunction();
   });
   
   function returnFunction(){
-    console.log("outside function "+enough);
+   
     if (enough > 0){
       orderResolve(true);
     }
@@ -125,15 +125,14 @@ function orderResolve(value){
   }
   else if(value === false){
     console.log("We're sorry, we do not have sufficient stock to cover that order :-(");
-    console.log(value);
     disconnect();
   };
 };
 
 function databaseUpdate(){
-  console.log("this is the spot where the database update will take place");
-  console.log(orderInformation);
-  console.log(orderedItem);
+
+  console.table(orderInformation);
+  console.table(orderedItem);
   connection.query(
     "UPDATE products SET ? WHERE ?",
     [
@@ -149,8 +148,8 @@ function databaseUpdate(){
       
     }
   );
-  console.log("New stock quantity :"+enough);
-  console.log("Your bill is: $"+(orderedItem.price * orderInformation.units));
+  console.log("\nNew stock quantity :"+enough);
+  console.log("\nYour bill is: $"+(orderedItem.price * orderInformation.units));
   disconnect();
 };
 
