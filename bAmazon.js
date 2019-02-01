@@ -134,16 +134,23 @@ function databaseUpdate(){
   console.log("this is the spot where the database update will take place");
   console.log(orderInformation);
   console.log(orderedItem);
-  // connection.query(
-  //   "INSERT INTO products SET stock_quantity = ?",
-  //   [enough],
-  //   function(err) {
-  //     if (err) throw err;
+  connection.query(
+    "UPDATE products SET ? WHERE ?",
+    [
+     {
+       stock_quantity: enough
+     },
+     {
+       item_id: orderInformation.item
+     }
+    ],
+    function(err) {
+      if (err) throw err;
       
-  //   }
-  // );
+    }
+  );
   console.log("New stock quantity :"+enough);
-  // console.log("Your bill is :"+);
+  console.log("Your bill is: $"+(orderedItem.price * orderInformation.units));
   disconnect();
 };
 
