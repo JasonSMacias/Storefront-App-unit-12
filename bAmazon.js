@@ -11,6 +11,10 @@ let itemNumbers = [];
 
 let enough;
 
+let orderInformation;
+
+let orderedItem;
+
 // variable storing password from .env
 const localDBPW = process.env.MYSQL_PW
 
@@ -93,6 +97,8 @@ let checkStock = async function(order) {
     console.log("stock quantity: "+results[0].stock_quantity);
     enough = results[0].stock_quantity - order.units;
     console.log("inside function "+enough);
+    orderInformation = order;
+    orderedItem = results[0];
     returnFunction();
   });
   
@@ -111,7 +117,7 @@ let checkStock = async function(order) {
 function orderResolve(value){
   if (value === true) {
     console.log("Your order has been placed, thanks for your business.");
-    disconnect();
+    databaseUpdate();
   }
   else if (value === "try again"){
     console.log("Please enter a valid number of units to order.");
@@ -122,6 +128,23 @@ function orderResolve(value){
     console.log(value);
     disconnect();
   };
+};
+
+function databaseUpdate(){
+  console.log("this is the spot where the database update will take place");
+  console.log(orderInformation);
+  console.log(orderedItem);
+  // connection.query(
+  //   "INSERT INTO products SET stock_quantity = ?",
+  //   [enough],
+  //   function(err) {
+  //     if (err) throw err;
+      
+  //   }
+  // );
+  console.log("New stock quantity :"+enough);
+  // console.log("Your bill is :"+);
+  disconnect();
 };
 
 function disconnect() {
