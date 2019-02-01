@@ -9,6 +9,9 @@ const cTable = require("console.table");
 
 let itemNumbers = [];
 
+let enough;
+let value;
+
 // variable storing password from .env
 const localDBPW = process.env.MYSQL_PW
 
@@ -48,28 +51,83 @@ function startFunction() {
   beginPrompt();
   });
 };
+
 function beginPrompt(){
   inquirer.prompt([
     {
-      name: "Choose item",
+      name: "item",
       type: "input",
       message: "Please select the item number of the item you would like to order",
     },
     {
-      name: "Choose another item",
+      name: "units",
       type: "input",
-      message: "Please select another",
+      message: "How many units would you like to buy",
     },
   ])
   .then(function(answer) {
-      // based on their answer, either call the bid or the post functions
-      if (answer.postOrBid === "POST") {
-        postAuction();
-      }
-      else if(answer.postOrBid === "BID") {
-        bidAuction();
-      } else{
-        connection.end();
-      }
-    });
+    if (answer.item > 0 && answer.item < 11){
+      console.log(`you ordered ${answer.units} units of item ${answer.item}.`);
+      checkStock(answer);
+      setTimeout(function(){
+        if (value === true) {
+          console.log("Your order has been placed, thanks for your business.");
+          disconnect();
+        }
+        else if (value === "try again"){
+          console.log("Please enter a valid number of units to order.");
+          beginPrompt();
+        }
+        else if(value === false){
+          console.log("We're sorry, we do not have sufficient stock to cover that order :-(");
+          console.log(value);
+          disconnect();
+        };
+      }, 2000);
+    }
+    else {
+      console.log("Please enter a valid item number.");
+      beginPrompt();
+    };
+  });
+};
+
+let checkStock = async function(order) {
+  console.log(order);
+  if(!Number.isInteger(parseInt(order.units))) {
+    
+    return "try again";
+    value = "try again";
+  };
+
+
+  connection.query("SELECT * FROM products WHERE item_id = ?", [order.item],
+  function (err, results) {
+    if (err) throw err;
+    console.log(results[0]);
+    console.log("order units: "+order.units);
+    console.log("stock quantity: "+results[0].stock_quantity);
+    enough = results[0].stock_quantity - order.units;
+    console.log("inside function "+enough);
+    returnFunction();
+  });
+  
+  function returnFunction(){
+    console.log("outside function "+enough);
+    if (enough > 0){
+      return true;
+      value = true;
+    }
+    else {
+      return false;
+      value = false;
+    };
+  };
+
+};
+
+function disconnect() {
+  connection.end(function (err) {
+    console.log("Goodbye :-)")
+  })
 };
