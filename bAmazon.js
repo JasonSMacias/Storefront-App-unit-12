@@ -70,7 +70,7 @@ function beginPrompt(){
   ])
   .then(function(answer) {
     if (answer.item > 0 && answer.item < 11){
-      console.log(`you ordered ${answer.units} units of item ${answer.item}.`);
+      console.log(`\nyou ordered ${answer.units} units of item ${answer.item}.`);
       checkStock(answer);
     }
     else {
@@ -92,9 +92,9 @@ let checkStock = async function(order) {
   connection.query("SELECT * FROM products WHERE item_id = ?", [order.item],
   function (err, results) {
     if (err) throw err;
-    console.log(results[0]);
-    console.log("order units: "+order.units);
-    console.log("stock quantity: "+results[0].stock_quantity);
+    
+    // console.log("\norder units: "+order.units);
+    // console.log("\nstock quantity: "+results[0].stock_quantity);
     enough = results[0].stock_quantity - order.units;
   
     orderInformation = order;
@@ -116,15 +116,15 @@ let checkStock = async function(order) {
 
 function orderResolve(value){
   if (value === true) {
-    console.log("Your order has been placed, thanks for your business.");
+    console.log("\nYour order has been placed, thanks for your business.");
     databaseUpdate();
   }
   else if (value === "try again"){
-    console.log("Please enter a valid number of units to order.");
+    console.log("\nPlease enter a valid number of units to order.");
     beginPrompt();
   }
   else if(value === false){
-    console.log("We're sorry, we do not have sufficient stock to cover that order :-(");
+    console.log("\nWe're sorry, we do not have sufficient stock to cover that order :-(");
     disconnect();
   };
 };
